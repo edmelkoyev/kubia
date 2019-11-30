@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2019-11-25T15:21:11Z"
+  generateName: kubia-
+  labels:
+    run: kubia
+  name: kubia-lvh7j
+  namespace: default
+  ownerReferences:
+  - apiVersion: v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicationController
+    name: kubia
+    uid: 36482f59-0f97-11ea-9e92-025000000001
+  resourceVersion: "54725"
+  selfLink: /api/v1/namespaces/default/pods/kubia-lvh7j
+  uid: 3649a313-0f97-11ea-9e92-025000000001
+spec:
+  containers:
+  - image: edmelkoyev/kubia
+    imagePullPolicy: Always
+    name: kubia
+    ports:
+    - containerPort: 8080
+      protocol: TCP
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: default-token-tzc8f
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: docker-desktop
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: default-token-tzc8f
+    secret:
+      defaultMode: 420
+      secretName: default-token-tzc8f
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2019-11-25T15:21:11Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2019-11-30T16:33:37Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2019-11-30T16:33:37Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2019-11-25T15:21:11Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://903fb38e4a2ab19c022ba602f7dffe3efd38b993117df0cb58932d1d76c58cb4
+    image: edmelkoyev/kubia:latest
+    imageID: docker-pullable://edmelkoyev/kubia@sha256:d0fe955ad018121425d442f80a24ea5758c83c8e1e70c0279038c8aa221c2bce
+    lastState:
+      terminated:
+        containerID: docker://5bb4975f51f4d86f1ae4347e2d648b10edc7d15d1d34e12d78efad2e111942e3
+        exitCode: 255
+        finishedAt: "2019-11-27T07:03:50Z"
+        reason: Error
+        startedAt: "2019-11-26T12:25:54Z"
+    name: kubia
+    ready: true
+    restartCount: 2
+    state:
+      running:
+        startedAt: "2019-11-30T16:33:37Z"
+  hostIP: 192.168.65.3
+  phase: Running
+  podIP: 10.1.0.38
+  qosClass: BestEffort
+  startTime: "2019-11-25T15:21:11Z"
