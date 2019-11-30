@@ -1,0 +1,164 @@
+$ kubectl get po
+-----------------
+    NAME          READY   STATUS    RESTARTS   AGE
+    kubia-lvh7j   1/1     Running   2          5d1h
+    kubia-xzmvf   1/1     Running   0          76m
+
+
+$ kubectl get po kubia-lvh7j -o yaml
+-------------------------
+#   result: see ./ch03/kubia-pod01.yaml
+
+
+$ kubectl explain pods
+-------------------------
+#   result: help information about pods properties
+
+
+$ kubectl explain pod.spec
+-------------------------
+#  result: help information about pods.spec properties
+
+
+$ kubectl get po
+    NAME          READY   STATUS    RESTARTS   AGE
+    kubia-lvh7j   1/1     Running   2          5d2h
+    kubia-xzmvf   1/1     Running   0          114m
+
+
+
+$ kubectl logs kubia-lvh7j
+-----------
+#   returns logs for all container in the pod
+
+
+$ kubectl logs kubia-lvh7j -c kubia
+-----------
+#   returns log for given (kubia) container on the pod
+
+
+RUN MANUALLY 
+=============
+$ kubectl create -f kubia-manual.yaml
+-----------
+    pod/kubia-manual created
+
+
+$ kubectl get po
+-----------
+    NAME           READY   STATUS    RESTARTS   AGE
+    kubia-lvh7j    1/1     Running   2          5d2h
+    kubia-manual   1/1     Running   0          80s
+    kubia-xzmvf    1/1     Running   0          141m
+
+$ kubectl logs kubia-manual -c kubia
+
+$ kubectl get po kubia-manual -o yaml
+
+MANUAL PORT MAPPING
+$ kubectl port-forward kubia-manual 8888:8080
+----
+  Forwarding from 127.0.0.1:8888 -> 8080
+  Forwarding from [::1]:8888 -> 8080
+  # TERMINAL GETS Busy ...
+----
+# In new Terminal 
+$ curl localhost: 8888
+  You've hit kubia-manual
+
+LABELS
+==========
+$ kubectl get po --show-labels
+
+TO show certain labels in separated colunms
+-----------
+$ kubectl get po -L creation_method,env
+
+Create new labels for running poda
+-----------
+$ kubectl label po kubia-manual creation_method=manual
+
+Update values for existing lavels
+-----------
+$ kubectl label po kubia-manual env=debug --overwrite
+
+SELECT by LABEL 
+===============
+$ kubectl get po -l creation_method=manual
+$ kubectl get po -l creation_method=manual -L env
+$ kubectl get po -l env
+$ kubectl get po -l env -L env
+$ kubectl get po -l '!env' --show-labels
+
+SET Label for Node
+===================
+$ kubectl label node gke-kubia-85f6-node-0rrx gpu=true
+$ kubectl get nodes -l gpu=true
+
+ANNOTATIONS
+==================
+$ kubectl annotate pod kubia-manual mycompany.com/someannotation="foo bar"
+
+$ kubectl describe pod kubia-manual
+
+
+NAMESPACE
+==================
+$ kubectl get ns
+    NAME              STATUS   AGE
+    default           Active   7d
+    docker            Active   7d
+    kube-node-lease   Active   7d
+    kube-public       Active   7d
+    kube-system       Active   7d
+
+$ kubectl get po --namespace kube-system
+$ kubectl get po -n kube-system
+    NAME                                     READY   STATUS    RESTARTS   AGE
+    coredns-6dcc67dcbc-2chmk                 1/1     Running   5          7d
+    coredns-6dcc67dcbc-gcgmj                 1/1     Running   5          7d
+    etcd-docker-desktop                      1/1     Running   5          7d
+    kube-apiserver-docker-desktop            1/1     Running   7          7d
+    kube-controller-manager-docker-desktop   1/1     Running   5          7d
+    kube-proxy-x8k9x                         1/1     Running   5          7d
+    kube-scheduler-docker-desktop            1/1     Running   5          7d
+
+CREATE namespace
+----------------
+$ kubectl create -f custom-namespace.yaml
+
+# alternative simple command
+$ kubectl create namespace custom-namespace2
+
+CREATE POD in specific ns
+-------------------------
+$ kubectl create -f kubia-manual.yaml -n custom-namespace
+
+
+DELETE pod
+------------------------
+# individual
+$ kubectl delete po kubia-manual -n custom-namespace
+
+# with label selector
+$ kubectl delete po -l creation_method=manual
+
+# it is possible to delete complete ns with pods
+$ kubectl delete ns custom-namespace
+
+# delete all pods
+$ kubectl delete po --all
+
+# NOTE: rc launches another n-replica of pods 
+
+DELETE ALL
+===============
+$ kubectl delete all --all
+    pod "kubia-987ws" deleted
+    pod "kubia-j9j7g" deleted
+    replicationcontroller "kubia" deleted
+    service "kubernetes" deleted
+    service "kubia-http" deleted
+
+
+
