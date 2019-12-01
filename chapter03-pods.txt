@@ -37,7 +37,7 @@ $ kubectl logs kubia-lvh7j -c kubia
 #   returns log for given (kubia) container on the pod
 
 
-RUN MANUALLY 
+RUN POD MANUALLY 
 =============
 $ kubectl create -f kubia-manual.yaml
 -----------

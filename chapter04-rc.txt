@@ -1,0 +1,55 @@
+ReplicationController
+=====================
+# livenessProbe
+  - test HTTP GET
+  - test TCP socket
+  - test Exec
+
+
+build version of kubia
+-------
+$ docker build -t edmelkoyev/kubia:latest -t edmelkoyev/kubia:v1 .
+$ docker push edmelkoyev/kubia:v1
+$ docker push edmelkoyev/kubia:latest
+
+build version of kubia-unhealthy
+-------
+$ docker build -t edmelkoyev/kubia-unhealthy:latest -t edmelkoyev/kubia-unhealthy:v1 .
+
+$ docker run -p 8080:8080 edmelkoyev/kubia-unhealthy:v1
+
+$ docker push edmelkoyev/kubia-unhealthy:v1
+$ docker push edmelkoyev/kubia-unhealthy:latest
+
+RUN POD MANUALLY
+----------------
+$ kubectl create -f ./kubia-leveness-probe.yaml
+
+MANUAL PORT MAPPING
+-----------------
+$ kubectl port-forward kubia-liveness 8888:8080
+
+MANUAL check state
+----------------
+$ kubectl get pods
+$ kubectl logs kubia-liveness -c kubia
+-----------
+
+DELETE ALL
+===============
+$ kubectl delete all --all
+
+
+$ kubectl describe po kubia-liveness
+...
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    137
+      Started:      Sun, 01 Dec 2019 22:23:23 +0300
+      Finished:     Sun, 01 Dec 2019 22:24:39 +0300
+    Ready:          True
+    Restart Count:  2
+    Liveness:       http-get http://:8080/ delay=0s timeout=1s period=10s #success=1 #failure=3
+...
+# 137 = 128 + 9  ( 9 - SIGKILL )
+# 143 = 128 + 15 ( 15 -SIGTERM )
